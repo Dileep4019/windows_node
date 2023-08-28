@@ -5,4 +5,4 @@
 
   tasks:
     - name: Create a folder
-      win_shell: New-Item -Path "C:\Windows\Boot" -ItemType Directory -Force
+      win_shell: New-Item -Path C:\Windows\Boot -ItemType Directory -Force
