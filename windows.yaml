@@ -1,25 +1,37 @@
 ---
-- name: Install Prometheus Node Exporter on Windows
-  hosts: 10.10.5.182
-  gather_facts: false
-  
+- name: Install and Configure Windows Exporter
+  hosts: 10.10.5.182  # Replace with your inventory group name
+
   tasks:
-    - name: Download Node Exporter ZIP
+    - name: Download Windows Exporter
       win_get_url:
-        url: https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.darwin-amd64.tar.gz
-        dest: C:\temp\node_exporter.tar.gz
+        url: "https://github.com/prometheus-community/windows_exporter/releases/download/v0.20.0/windows_exporter-0.20.0-amd64.msi"
+        dest: C:\Temp\windows_exporter.msi
 
-    - name: Extract Node Exporter
-      win_shell: |
-        Expand-Archive -Path C:\temp\node_exporter.tar.gz -DestinationPath C:\Program Files\NodeExporter -Force
+    - name: Install Windows Exporter
+      win_msi:
+        path: C:\Temp\windows_exporter.msi
+        product_id: "{{ query('win_shell', 'Get-WmiObject Win32_Product | Where-Object { $_.Name -eq ''Windows Exporter 0.20.0'' } | Select-Object -ExpandProperty IdentifyingNumber').stdout }}"
+        state: present
+      ignore_errors: yes
 
-    - name: Create Node Exporter Service
+    - name: Configure Windows Exporter
       win_shell: |
-        sc.exe create NodeExporter binPath= "C:\Program Files\NodeExporter\node_exporter.exe" start= auto
+        $configPath = "C:\Program Files\Windows Exporter\windows_exporter.yml"
+        $config = @"
+        collectors:
+          enabled:
+            - cpu
+            - memory
+            - disk
+            - network
+        "@
+        $config | Set-Content -Path $configPath -Force
       args:
-        creates: HKLM\System\CurrentControlSet\Services\NodeExporter
+        creates: C:\Program Files\Windows Exporter\windows_exporter.yml
 
-    - name: Start Node Exporter Service
+    - name: Start Windows Exporter Service
       win_service:
-        name: NodeExporter
+        name: windows_exporter
+        start_mode: auto
         state: started
