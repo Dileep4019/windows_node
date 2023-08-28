@@ -1,19 +1,24 @@
 ---
-- name: Install Windows Exporter
+- name: Install Prometheus Node Exporter on Windows
   hosts: 10.10.5.182
+  gather_facts: yes
   tasks:
-    - name: Download Windows Exporter MSI
+    - name: Download Node Exporter ZIP
       win_get_url:
-        url: "https://github.com/prometheus-community/windows_exporter/releases/download/v0.20.0/windows_exporter-0.20.0-amd64.msi"
-        dest: C:\temp\windows_exporter.msi
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.windows-amd64.tar.gz
+        dest: C:\temp\node_exporter.tar.gz
 
-    - name: Install Windows Exporter
-      win_msi:
-        path: C:\temp\windows_exporter.msi
-        arguments: '/qn'
+    - name: Extract Node Exporter
+      win_shell: |
+        Expand-Archive -Path C:\temp\node_exporter.tar.gz -DestinationPath C:\Program Files\NodeExporter -Force
 
-    - name: Start Windows Exporter Service
+    - name: Create Node Exporter Service
+      win_shell: |
+        sc.exe create NodeExporter binPath= "C:\Program Files\NodeExporter\node_exporter.exe" start= auto
+      args:
+        creates: HKLM\System\CurrentControlSet\Services\NodeExporter
+
+    - name: Start Node Exporter Service
       win_service:
-        name: windows_exporter
+        name: NodeExporter
         state: started
-        start_mode: auto
