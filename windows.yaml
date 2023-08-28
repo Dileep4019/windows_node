@@ -11,8 +11,7 @@
 
     - name: Install Windows Exporter
       win_msi:
-        path: C:\Temp\windows_exporter.msi
-        product_id: "{{ query('win_shell', 'Get-WmiObject Win32_Product | Where-Object { $_.Name -eq ''Windows Exporter 0.20.0'' } | Select-Object -ExpandProperty IdentifyingNumber').stdout }}"
+        path: C:\windows_exporter.msi
         state: present
       ignore_errors: yes
 
