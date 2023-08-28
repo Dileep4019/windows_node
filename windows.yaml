@@ -6,5 +6,5 @@
   tasks:
     - name: Create a folder
       win_shell: |
-        New-Item -Path "C:\Users\Public\Documents" -ItemType Directory -Force
+        New-Item -Path C:\Users\Public\Documents -ItemType Directory -Force
       become: yes
