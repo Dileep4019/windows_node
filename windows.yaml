@@ -1,10 +1,8 @@
 ---
 - name: Create Folder on Windows 10
-  hosts: 10.10.5.182  # Replace with the name of your Windows host in your Ansible inventory
-  gather_facts: no     # We don't need to gather facts for this task
+  hosts: 10.10.5.182
+  gather_facts: false
 
   tasks:
     - name: Create a folder
-      win_shell: |
-        New-Item -Path C:\Users\Public\Documents -ItemType Directory -Force
-      become: yes
+      win_shell: New-Item -Path "C:\Windows\Boot" -ItemType Directory -Force
