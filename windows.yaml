@@ -6,7 +6,7 @@
   tasks:
     - name: Create target folder
       win_file:
-        path: "C:\Users\ansible\Documents"  # Replace with your desired folder path
+        path: "C:\\Users\\ansible\\Documents"  # Replace with your desired folder path
         state: directory
       register: folder_creation_result
 
