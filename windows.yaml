@@ -1,8 +1,15 @@
 ---
-- name: Create Folder on Windows 10
-  hosts: 10.10.5.182
-  gather_facts: false
+- name: Create Folder in Windows 10
+  hosts: 10.10.5.182  # Replace with your host group name or specific host
+  gather_facts: false   # We don't need to gather facts in this example
 
   tasks:
-    - name: Create a folder
-      win_shell: New-Item -Path "C:\\test" -ItemType Directory -Force
+    - name: Create target folder
+      win_file:
+        path: "C:\Users\ansible"  # Replace with your desired folder path
+        state: directory
+      register: folder_creation_result
+
+    - name: Display result
+      debug:
+        var: folder_creation_result
