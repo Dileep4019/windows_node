@@ -1,6 +1,6 @@
 ---
 - name: Install Prometheus Node Exporter on Ubuntu
-  hosts: 10.10.5.82   # Replace with your AWX inventory group
+  hosts: 10.10.5.82  # Replace with your AWX inventory group
   become: yes                # Enable privilege escalation (sudo)
   tasks:
     - name: Download Node Exporter archive
@@ -20,7 +20,6 @@
         name: node_exporter
         enabled: yes
         state: started
-        daemon_reload: yes
         daemon_reload: yes
         unit_content: |
           [Unit]
