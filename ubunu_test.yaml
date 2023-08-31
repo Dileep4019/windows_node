@@ -1,0 +1,9 @@
+---
+- name: Create a folder on Ubuntu
+  hosts: 10.10.5.82   # This should match your AWX inventory
+  become: yes                # This enables privilege escalation (sudo)
+  tasks:
+    - name: Create a folder
+      file:
+        path: /downloads/test
+        state: directory
