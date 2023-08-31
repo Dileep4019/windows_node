@@ -1,9 +1,41 @@
 ---
-- name: Create a folder on Ubuntu
-  hosts: 10.10.5.82   # This should match your AWX inventory
-  become: yes                # This enables privilege escalation (sudo)
+- name: Install Prometheus Node Exporter on Ubuntu
+  hosts: 10.10.5.82   # Replace with your AWX inventory group
+  become: yes                # Enable privilege escalation (sudo)
   tasks:
-    - name: Create a folder
-      file:
-        path: /downloads/test
-        state: directory
+    - name: Download Node Exporter archive
+      get_url:
+        url: https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
+        dest: /tmp/node_exporter.tar.gz
+
+    - name: Extract Node Exporter archive
+      ansible.builtin.unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /opt
+        remote_src: yes
+        creates: /opt/node_exporter-1.2.2.linux-amd64
+
+    - name: Create systemd service for Node Exporter
+      systemd:
+        name: node_exporter
+        enabled: yes
+        state: started
+        daemon_reload: yes
+        daemon_reload: yes
+        unit_content: |
+          [Unit]
+          Description=Prometheus Node Exporter
+          After=network.target
+
+          [Service]
+          ExecStart=/opt/node_exporter-1.2.2.linux-amd64/node_exporter
+          Restart=always
+
+          [Install]
+          WantedBy=default.target
+
+    - name: Open firewall port for Node Exporter
+      ansible.builtin.ufw:
+        rule: allow
+        port: 9100
+        proto: tcp
