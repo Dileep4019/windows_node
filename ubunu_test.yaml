@@ -3,11 +3,6 @@
   hosts: 10.10.5.82
   become: true
   tasks:
-    - name: Update apt cache (for Ubuntu/Debian)
-      apt:
-        update_cache: yes
-      when: ansible_distribution in ['Ubuntu', 'Debian']
-
     - name: Install MySQL packages
       apt:
         name: ['mysql-server', 'mysql-client']
