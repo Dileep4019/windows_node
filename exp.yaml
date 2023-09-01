@@ -1,33 +1,15 @@
 ---
-- name: Install and Configure Windows Exporter
+- name: Install Windows Exporter
   hosts: 10.10.5.182
-  gather_facts: false
-
+  gather_facts: yes
   tasks:
-    - name: Download Windows Exporter ZIP
-      win_get_url:
-        url: "https://github.com/prometheus-community/windows_exporter/releases/download/v1.2.0/windows_exporter-1.2.0-amd64.zip"
-        dest: "C:\\Temp\\windows_exporter.zip"
-
-    - name: Extract Windows Exporter ZIP
-      win_unzip:
-        src: "C:\\Temp\\windows_exporter.zip"
-        dest: "C:\\Program Files\\Windows Exporter"
-        creates: "C:\\Program Files\\Windows Exporter\\windows_exporter.exe"
-
-    - name: Create Windows Exporter Service
-      win_shell: |
-        $serviceName = "windows_exporter"
-        $executablePath = "C:\\Program Files\\Windows Exporter\\windows_exporter.exe"
-        $arguments = "--collector.textfile.directory=C:\\Prometheus\\exporter_textfiles"
-
-        New-Service -Name $serviceName -BinaryPathName "$executablePath $arguments" -DisplayName "Windows Exporter"
-        Start-Service -Name $serviceName
-      args:
-        executable: powershell.exe
-
-    - name: Add Firewall Rule for Windows Exporter
-      win_shell: |
-        New-NetFirewallRule -DisplayName "Windows Exporter" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 9182
-      args:
-        executable: powershell.exe
+    - name: Install Prometheus Windows Exporter
+      community.windows.windows_exporter:
+        version: 0.18.1
+      register: windows_exporter_installed
+    - name: Start Windows Exporter Service
+      win_service:
+        name: prometheus_win_exporter
+        start_mode: auto
+        state: started
+      when: windows_exporter_installed.changed
