@@ -1,26 +1,32 @@
 ---
 - name: Install Windows Exporter
-  hosts: 172.16.0.122 # Replace with the name of your Windows 10 host or group
+  hosts: 10.10.5.182
   become: yes
   tasks:
-    - name: Download Windows Exporter
-      win_get_url:
-        url: https://github.com/prometheus-community/windows_exporter/releases/download/v0.18.1/windows_exporter-0.18.1-amd64.exe
-        dest: C:\\widndows\\Prometheus\\windows_exporter.exe
-      register: download_result
-
-    - name: Ensure Prometheus Directory Exists
+    - name: Create directory for Windows Exporter
       win_file:
-        path: C:\Prometheus
+        path: C:\Prometheus\exporter
         state: directory
-
-    - name: Create Windows Exporter Service
-      win_shell: |
-        New-Service -Name "Prometheus-Windows-Exporter" -BinaryPathName "C:\Prometheus\windows_exporter.exe --collectors.enabled="cpu,logon,logical_disk,mem,net,os,system,thermal_zone"" -DisplayName "Prometheus Windows Exporter" -Description "Prometheus Windows Exporter Service" -StartupType Automatic
-      when: download_result.changed
-
-    - name: Start Windows Exporter Service
+    - name: Download Windows Exporter ZIP
+      win_get_url:
+        url: https://github.com/prometheus-community/windows_exporter/releases/download/v0.23.1/windows_exporter-0.23.1-386.exe
+        dest: C:\Prometheus\exporter\windows_exporter.zip
+    - name: Unzip Windows Exporter
+      win_unzip:
+        src: C:\Prometheus\exporter\windows_exporter.zip
+        dest: C:\Prometheus\exporter\
+      args:
+        creates: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+    - name: Create Windows Exporter service
+      win_command: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+        --install
+      args:
+        creates: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+    - name: Start Windows Exporter service
       win_service:
-        name: Prometheus-Windows-Exporter
+        name: WindowsExporter
         state: started
-      when: download_result.changed
+    - name: Enable Windows Exporter service on boot
+      win_service:
+        name: WindowsExporter
+        enabled: yes
