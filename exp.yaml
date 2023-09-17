@@ -17,12 +17,12 @@
         src: C:\Prometheus\exporter\windows_exporter.zip
         dest: C:\\Prometheus\\exporter\\
       args:
-        creates: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+        creates: C:\Prometheus\exporter\windows_exporter-0.23.1-amd64\windows_exporter.exe
     - name: Create Windows Exporter service
-      win_command: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+      win_command: C:\Prometheus\exporter\windows_exporter-0.23.1-amd64\windows_exporter.exe
         --install
       args:
-        creates: C:\Prometheus\exporter\windows_exporter-0.21.0-amd64\windows_exporter.exe
+        creates: C:\Prometheus\exporter\windows_exporter-0.23.1-amd64\windows_exporter.exe
     - name: Start Windows Exporter service
       win_service:
         name: WindowsExporter
