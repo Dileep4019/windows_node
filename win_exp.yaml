@@ -15,9 +15,9 @@
     - name: Unzip Windows Exporter
       win_unzip:
         src: C:\Prometheus\exporter\windows_exporter.zip
-        dest: C:\Prometheus\\exporter\
+        dest: C:\Users\inndata-kap-002\AppData\Local\Temp\exporter
       args:
-        creates: C:\Prometheus\exporter\windows_exporter-0.23.1-amd64\windows_exporter.msi
+        creates: C:\Users\inndata-kap-002\AppData\Local\Temp\exporter\windows_exporter-0.23.1-amd64\windows_exporter.msi
     - name: Create Windows Exporter service
       win_command: C:\Prometheus\exporter\windows_exporter-0.23.1-amd64\windows_exporter.msi
         --install
