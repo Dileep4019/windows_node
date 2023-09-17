@@ -13,6 +13,7 @@
         url: https://github.com/prometheus-community/windows_exporter/releases/download/v0.23.1/windows_exporter-0.23.1-386.msi 
         dest: C:\\Prometheus\\exporter\\windows_exporter.zip
     - name: Unzip Windows Exporter with 7-Zip
+     win_unzip:
         win_command: C:\Path\to\7z.exe x C:\Prometheus\exporter\windows_exporter.zip -oC:\Temp\exporter
       args:
         creates: C:\Temp\exporter\windows_exporter-0.23.1-amd64\windows_exporter.msi
