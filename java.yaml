@@ -1,5 +1,9 @@
-- name: Download Java MSI file
-  hosts: 10.10.5.181
+---
+- name: Java Installation Playbook
+  hosts: 10.10.5.181  # This specifies the group of hosts from the inventory file
+
+  tasks:
+    - name: Download Java MSI file
       win_get_url:
         url: "https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u372-b07/openlogic-openjdk-8u372-b07-windows-x64.msi"
         dest: "C:\\openlogic-openjdk-8u372-b07-windows-x64.msi"
