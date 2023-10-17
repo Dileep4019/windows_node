@@ -1,4 +1,4 @@
---
+---
 - name: Install SQLite on Windows
   hosts: 10.10.5.181
   gather_facts: no
