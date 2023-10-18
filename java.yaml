@@ -1,21 +1,12 @@
 ---
-- name: Java Installation Playbook
-  hosts: 10.10.5.181  # This specifies the group of hosts from the inventory file
-
+- name: Install Java on Windows
+  hosts: java_servers
   tasks:
-    - name: Download Java MSI file
+    - name: Download Java installer
       win_get_url:
-        url: "https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u372-b07/openlogic-openjdk-8u372-b07-windows-x64.msi"
-        dest: "C:\\openlogic-openjdk-8u372-b07-windows-x64.msi"
+        url: "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe"
+        dest: C:\Temp\jdk-17_windows-x64_bin.exe
 
     - name: Install Java
-      win_package:
-        path: "C:\\openlogic-openjdk-8u372-b07-windows-x64.msi"
-        product_id: "*"
-        arguments: "/qn"
-
-    - name: Set JAVA_HOME environment variable
       win_shell: |
-        setx -m JAVA_HOME "C:\\Program Files\\OpenLogic\\jdk-8.0.372.07-hotspot"
-      environment:
-        PATH: "{{ ansible_env.PATH }};C:\\Program Files\\OpenLogic\\jdk-8.0.372.07-hotspot\\bin"
+        Start-Process -FilePath "C:\Temp\jdk-17_windows-x64_bin.exe" -ArgumentList "/s ADDLOCAL=FeatureMain,FeatureEnvironment,FeatureJarFileRunWith,FeatureJnlpDownload" -Wait
