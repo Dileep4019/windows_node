@@ -5,7 +5,7 @@
     - name: Download Java installer
       win_get_url:
         url: "https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe"
-        dest: C:\Temp\jdk-17_windows-x64_bin.exe
+        dest:C:\Program Files
 
     - name: Install Java
       win_shell: |
