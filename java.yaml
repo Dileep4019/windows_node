@@ -1,6 +1,6 @@
 ---
 - name: Install Java on Windows
-  hosts: java_servers
+  hosts: 10.10.5.181
   tasks:
     - name: Download Java installer
       win_get_url:
