@@ -1,6 +1,6 @@
 ---
 - name: Install Java on Windows
-  hosts: 10.10.5.181
+  hosts: 10.10.5.182
   tasks:
     - name: Create Temp directory
       win_file:
